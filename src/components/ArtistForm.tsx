@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-// 1. Define schema using Yup
+// ✅ 1. Define the validation schema
 const schema = yup
   .object({
     name: yup.string().required('Name is required'),
@@ -31,9 +31,10 @@ const schema = yup
   })
   .required();
 
-// 2. Infer type from schema to keep it in sync
+// ✅ 2. Infer the form input type from schema
 type ArtistFormInputs = yup.InferType<typeof schema>;
 
+// ✅ 3. Constants for form choices
 const categories = ['Singer', 'Dancer', 'Speaker', 'DJ'];
 const languages = ['English', 'Hindi', 'Tamil', 'Kannada'];
 const feeOptions = ['₹10k–₹20k', '₹20k–₹30k', '₹30k–₹40k'];
