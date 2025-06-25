@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-// ✅ Schema with REQUIRED category/languages/image to match resolver
+//  Schema with REQUIRED category/languages/image to match resolver
 const schema = yup.object({
   name: yup.string().required('Name is required'),
   bio: yup.string().required('Bio is required'),
