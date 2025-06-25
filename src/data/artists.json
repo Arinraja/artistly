@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Ariana Soul",
+    "category": "Singer",
+    "price": "₹20,000 - ₹30,000",
+    "location": "Delhi"
+  },
+  {
+    "id": 2,
+    "name": "DJ Blaze",
+    "category": "DJ",
+    "price": "₹15,000 - ₹25,000",
+    "location": "Mumbai"
+  },
+  {
+    "id": 3,
+    "name": "Rhythm Moves",
+    "category": "Dancer",
+    "price": "₹10,000 - ₹18,000",
+    "location": "Bangalore"
+  },
+  {
+    "id": 4,
+    "name": "Dr. Inspire",
+    "category": "Speaker",
+    "price": "₹25,000 - ₹35,000",
+    "location": "Chennai"
+  }
+]
