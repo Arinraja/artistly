@@ -1,8 +1,22 @@
 'use client';
-import { useForm } from 'react-hook-form';
+
+import React from 'react';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
+// 1. Define the type for your form data
+type ArtistFormInputs = {
+  name: string;
+  bio: string;
+  category: string[];
+  languages: string[];
+  fee: string;
+  location: string;
+  image?: FileList;
+};
+
+// 2. Define schema using Yup
 const schema = yup.object().shape({
   name: yup.string().required('Name is required'),
   bio: yup.string().required('Bio is required'),
@@ -21,7 +35,7 @@ const schema = yup.object().shape({
     .test('fileSize', 'File is too large', (value) => {
       const file = (value as FileList)?.[0];
       if (!file) return true;
-      return file.size <= 5 * 1024 * 1024;
+      return file.size <= 5 * 1024 * 1024; // 5MB
     }),
 });
 
@@ -34,34 +48,26 @@ export default function ArtistForm() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({
+  } = useForm<ArtistFormInputs>({
     resolver: yupResolver(schema),
   });
 
-//   const onSubmit = (data: any) => {
-//     console.log('Submitted form data:', {
-//       ...data,
-//       image: data.image?.[0]?.name || 'No file uploaded',
-//     });
-//     alert('Artist submitted! Check console log.');
-//   };
-const onSubmit = (data: any) => {
-  const submittedArtist = {
-    ...data,
-    id: Date.now(), // simple unique ID
-    price: data.fee,
+  // 3. Use proper type in onSubmit
+  const onSubmit: SubmitHandler<ArtistFormInputs> = (data) => {
+    const submittedArtist = {
+      ...data,
+      id: Date.now(),
+      price: data.fee,
+    };
+
+    const stored = localStorage.getItem('submittedArtists');
+    const existing = stored ? JSON.parse(stored) : [];
+    const updated = [...existing, submittedArtist];
+
+    localStorage.setItem('submittedArtists', JSON.stringify(updated));
+
+    alert('Artist submitted! Check dashboard.');
   };
-
-  // Save to localStorage
-  const stored = localStorage.getItem('submittedArtists');
-  const existing = stored ? JSON.parse(stored) : [];
-  const updated = [...existing, submittedArtist];
-
-  localStorage.setItem('submittedArtists', JSON.stringify(updated));
-
-  alert('Artist submitted! Check dashboard.');
-};
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-w-xl mx-auto">
