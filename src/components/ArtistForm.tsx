@@ -5,36 +5,34 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-// ✅ 1. Define the validation schema
-const schema = yup
-  .object({
-    name: yup.string().required('Name is required'),
-    bio: yup.string().required('Bio is required'),
-    category: yup
-      .array()
-      .of(yup.string().required())
-      .min(1, 'Select at least one category'),
-    languages: yup
-      .array()
-      .of(yup.string().required())
-      .min(1, 'Select at least one language'),
-    fee: yup.string().required('Fee is required'),
-    location: yup.string().required('Location is required'),
-    image: yup
-      .mixed()
-      .notRequired()
-      .test('fileSize', 'File is too large', (value) => {
-        const file = (value as FileList)?.[0];
-        if (!file) return true;
-        return file.size <= 5 * 1024 * 1024; // 5MB
-      }),
-  })
-  .required();
+// ✅ Schema with REQUIRED category/languages/image to match resolver
+const schema = yup.object({
+  name: yup.string().required('Name is required'),
+  bio: yup.string().required('Bio is required'),
+  category: yup
+    .array()
+    .of(yup.string().required())
+    .required('Category is required')
+    .min(1, 'Select at least one category'),
+  languages: yup
+    .array()
+    .of(yup.string().required())
+    .required('Languages is required')
+    .min(1, 'Select at least one language'),
+  fee: yup.string().required('Fee is required'),
+  location: yup.string().required('Location is required'),
+  image: yup
+    .mixed()
+    .required('Image is required')
+    .test('fileSize', 'File is too large', (value) => {
+      const file = (value as FileList)?.[0];
+      if (!file) return true;
+      return file.size <= 5 * 1024 * 1024; // 5MB
+    }),
+});
 
-// ✅ 2. Infer the form input type from schema
 type ArtistFormInputs = yup.InferType<typeof schema>;
 
-// ✅ 3. Constants for form choices
 const categories = ['Singer', 'Dancer', 'Speaker', 'DJ'];
 const languages = ['English', 'Hindi', 'Tamil', 'Kannada'];
 const feeOptions = ['₹10k–₹20k', '₹20k–₹30k', '₹30k–₹40k'];
@@ -60,7 +58,6 @@ export default function ArtistForm() {
     const updated = [...existing, submittedArtist];
 
     localStorage.setItem('submittedArtists', JSON.stringify(updated));
-
     alert('Artist submitted! Check dashboard.');
   };
 
@@ -82,12 +79,7 @@ export default function ArtistForm() {
         <label className="block mb-1 font-medium">Categories</label>
         {categories.map((cat) => (
           <label key={cat} className="block">
-            <input
-              type="checkbox"
-              value={cat}
-              {...register('category')}
-              className="mr-2"
-            />
+            <input type="checkbox" value={cat} {...register('category')} className="mr-2" />
             {cat}
           </label>
         ))}
@@ -98,12 +90,7 @@ export default function ArtistForm() {
         <label className="block mb-1 font-medium">Languages Spoken</label>
         {languages.map((lang) => (
           <label key={lang} className="block">
-            <input
-              type="checkbox"
-              value={lang}
-              {...register('languages')}
-              className="mr-2"
-            />
+            <input type="checkbox" value={lang} {...register('languages')} className="mr-2" />
             {lang}
           </label>
         ))}
@@ -115,7 +102,9 @@ export default function ArtistForm() {
         <select {...register('fee')} className="border rounded p-2 w-full">
           <option value="">Select Fee</option>
           {feeOptions.map((fee) => (
-            <option key={fee} value={fee}>{fee}</option>
+            <option key={fee} value={fee}>
+              {fee}
+            </option>
           ))}
         </select>
         <p className="text-red-500 text-sm">{errors.fee?.message}</p>
@@ -128,7 +117,7 @@ export default function ArtistForm() {
       </div>
 
       <div>
-        <label className="block mb-1 font-medium">Profile Image (Optional)</label>
+        <label className="block mb-1 font-medium">Profile Image</label>
         <input type="file" {...register('image')} className="border rounded p-2 w-full" />
         <p className="text-red-500 text-sm">{errors.image?.message}</p>
       </div>
