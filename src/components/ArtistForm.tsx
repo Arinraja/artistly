@@ -5,40 +5,34 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 
-// 1. Define the type for your form data
-type ArtistFormInputs = {
-  name: string;
-  bio: string;
-  category: string[];
-  languages: string[];
-  fee: string;
-  location: string;
-  image?: FileList;
-};
+// 1. Define schema using Yup
+const schema = yup
+  .object({
+    name: yup.string().required('Name is required'),
+    bio: yup.string().required('Bio is required'),
+    category: yup
+      .array()
+      .of(yup.string().required())
+      .min(1, 'Select at least one category'),
+    languages: yup
+      .array()
+      .of(yup.string().required())
+      .min(1, 'Select at least one language'),
+    fee: yup.string().required('Fee is required'),
+    location: yup.string().required('Location is required'),
+    image: yup
+      .mixed()
+      .notRequired()
+      .test('fileSize', 'File is too large', (value) => {
+        const file = (value as FileList)?.[0];
+        if (!file) return true;
+        return file.size <= 5 * 1024 * 1024; // 5MB
+      }),
+  })
+  .required();
 
-// 2. Define schema using Yup
-const schema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  bio: yup.string().required('Bio is required'),
-  category: yup
-    .array()
-    .of(yup.string())
-    .min(1, 'Select at least one category'),
-  languages: yup
-    .array()
-    .of(yup.string())
-    .min(1, 'Select at least one language'),
-  fee: yup.string().required('Fee is required'),
-  location: yup.string().required('Location is required'),
-  image: yup
-    .mixed()
-    .notRequired() // <-- this fixes the build error
-    .test('fileSize', 'File is too large', (value) => {
-      const file = (value as FileList)?.[0];
-      if (!file) return true;
-      return file.size <= 5 * 1024 * 1024; // 5MB
-    }),
-});
+// 2. Infer type from schema to keep it in sync
+type ArtistFormInputs = yup.InferType<typeof schema>;
 
 const categories = ['Singer', 'Dancer', 'Speaker', 'DJ'];
 const languages = ['English', 'Hindi', 'Tamil', 'Kannada'];
