@@ -32,6 +32,7 @@ const schema = yup.object().shape({
   location: yup.string().required('Location is required'),
   image: yup
     .mixed()
+    .notRequired() // <-- this fixes the build error
     .test('fileSize', 'File is too large', (value) => {
       const file = (value as FileList)?.[0];
       if (!file) return true;
@@ -52,7 +53,6 @@ export default function ArtistForm() {
     resolver: yupResolver(schema),
   });
 
-  // 3. Use proper type in onSubmit
   const onSubmit: SubmitHandler<ArtistFormInputs> = (data) => {
     const submittedArtist = {
       ...data,
