@@ -1,20 +1,3 @@
-// import ArtistCard from '@/components/ArtistCard';
-// import artists from '@/data/artists.json';
-
-// export default function ArtistListPage() {
-//   return (
-//     <section className="p-6 max-w-7xl mx-auto">
-//       <h1 className="text-3xl font-bold mb-6">Available Artists</h1>
-
-//       {/* Artist Grid */}
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-//         {artists.map((artist) => (
-//           <ArtistCard key={artist.id} artist={artist} />
-//         ))}
-//       </div>
-//     </section>
-//   );
-// }
 'use client';
 import { useState } from 'react';
 import ArtistCard from '@/components/ArtistCard';
